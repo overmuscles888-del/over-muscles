@@ -1,23 +1,260 @@
-<!-- مكان زرار رفع الصورة -->
-<input type="file" id="heroImageInput" accept="image/*">
-<button onclick="saveHeroImage()">حفظ الصورة</button>
-
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم - Over Muscles</title>
+<script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
 <script>
-// دالة رفع وحفظ الصورة محلياً من الجهاز بدون أخطاء
-function saveHeroImage() {
-    const fileInput = document.getElementById('heroImageInput');
-    if (fileInput.files && fileInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const base64Image = e.target.result;
-            // حفظ الصورة في الـ LocalStorage
-            localStorage.setItem('hero_image', base64Image);
-            alert('تم حفظ الصورة بنجاح يا أحمد!');
-            location.reload();
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-    } else {
-        alert('من فضلك اختر صورة الأول!');
-    }
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+brandDark: '#000000',
+brandGreen: '#A8E630',
+}
+}
+}
 }
 </script>
+<script src="[https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2](https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2)"></script>
+</head>
+<body class="bg-brandDark text-white font-sans selection:bg-brandGreen selection:text-black">
+<div id="loginScreen" class="fixed inset-0 bg-black flex items-center justify-center z-50">
+<div class="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl w-full max-w-md shadow-2xl text-center">
+<h2 class="text-2xl font-black text-brandGreen mb-4">لوحة التحكم السحابية</h2>
+<p class="text-zinc-400 text-sm mb-6">أدخل كلمة المرور (NOUR3011)</p>
+<input type="password" id="adminPassword" placeholder="كلمة المرور" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white mb-4 focus:outline-none focus:border-brandGreen">
+<button onclick="checkPassword()" class="w-full bg-brandGreen text-black font-bold py-3 rounded-xl hover:bg-[#95ce28] transition">دخول</button>
+</div>
+</div>
+<div id="adminPanel" class="hidden max-w-4xl mx-auto px-4 py-12">
+<div class="flex justify-between items-center mb-10 pb-6 border-b border-zinc-800">
+<h1 class="text-3xl font-black text-brandGreen">لوحة التحكم الكاملة - Over Muscles</h1>
+<a href="index.html" target="_blank" class="bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-sm hover:border-brandGreen transition">عرض الموقع ↗</a>
+</div>
+<!-- 1. تعديل الواجهة الرئيسية (الهيرو) -->
+<div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-8 shadow-xl">
+<h3 class="text-xl font-bold mb-4 text-brandGreen">تعديل الواجهة الرئيسية (الهيرو)</h3>
+<div class="space-y-4">
+<div>
+<label class="block text-sm text-zinc-400 mb-2">عنوان البراند / الهيرو:</label>
+<input type="text" id="heroTitleInput" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+</div>
+<div>
+<label class="block text-sm text-zinc-400 mb-2">النص الفرعي (السبتايتل):</label>
+<textarea id="heroSubtitleInput" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white h-20"></textarea>
+</div>
+<div>
+<label class="block text-sm text-zinc-400 mb-2">رفع صورة الهيرو الجديدة من الجهاز أو الموبايل:</label>
+<input type="file" id="heroImageFile" accept="image/*" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-zinc-400 file:bg-brandGreen file:text-black file:border-0 file:rounded-lg file:px-3 file:py-1 file:cursor-pointer">
+</div>
+<div>
+<label class="block text-sm text-zinc-400 mb-2">رقم واتساب الأعمال:</label>
+<input type="text" id="whatsappInput" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+</div>
+<button onclick="saveHeroSettings()" class="bg-brandGreen text-black font-bold px-6 py-3 rounded-xl hover:bg-[#95ce28] transition">حفظ إعدادات الهيرو والواتساب</button>
+</div>
+</div>
+<!-- 2. تعديل قسم أفضل منتج للمبتدئين -->
+<div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-8 shadow-xl">
+<h3 class="text-xl font-bold mb-4 text-brandGreen">تعديل أفضل منتج للمبتدئين</h3>
+<div class="space-y-4">
+<div>
+<label class="block text-sm text-zinc-400 mb-2">اسم المنتج:</label>
+<input type="text" id="beginnerName" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-sm text-zinc-400 mb-2">السعر (ج.م):</label>
+<input type="text" id="beginnerPrice" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+</div>
+<div>
+<label class="block text-sm text-zinc-400 mb-2">نسبة الخصم (اختياري):</label>
+<input type="text" id="beginnerDiscount" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+</div>
+</div>
+<div>
+<label class="block text-sm text-zinc-400 mb-2">صورة المنتج:</label>
+<input type="file" id="beginnerImageFile" accept="image/*" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-zinc-400 file:bg-brandGreen file:text-black file:border-0 file:rounded-lg file:px-3 file:py-1 file:cursor-pointer">
+</div>
+<div>
+<label class="block text-sm text-zinc-400 mb-2">تفاصيل لماذا هذا المنتج مفضل للمبتدئين:</label>
+<textarea id="beginnerDetails" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white h-20"></textarea>
+</div>
+<button onclick="saveBeginnerProduct()" class="bg-brandGreen text-black font-bold px-6 py-3 rounded-xl hover:bg-[#95ce28] transition">حفظ منتج المبتدئين</button>
+</div>
+</div>
+<!-- 3. إضافة وتعديل المنتجات اللانهائية -->
+<div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-8 shadow-xl">
+<h3 class="text-xl font-bold mb-4 text-brandGreen">إضافة منتج جديد للمنتجات الشائعة / الكاملة</h3>
+<div class="space-y-4">
+<div>
+<label class="block text-sm text-zinc-400 mb-2">اسم المنتج:</label>
+<input type="text" id="productName" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-sm text-zinc-400 mb-2">السعر (ج.م):</label>
+<input type="text" id="productPrice" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+</div>
+<div>
+<label class="block text-sm text-zinc-400 mb-2">نسبة الخصم (اختياري):</label>
+<input type="text" id="productDiscount" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+</div>
+</div>
+<div>
+<label class="block text-sm text-zinc-400 mb-2">صورة المنتج:</label>
+<input type="file" id="productImageFile" accept="image/*" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-zinc-400 file:bg-brandGreen file:text-black file:border-0 file:rounded-lg file:px-3 file:py-1 file:cursor-pointer">
+</div>
+<div>
+<label class="block text-sm text-zinc-400 mb-2">تفاصيل المنتج (الطعم، الاستخدام، إلخ):</label>
+<textarea id="productDetails" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white h-20"></textarea>
+</div>
+<button onclick="addProduct()" class="w-full bg-brandGreen text-black font-bold py-3 rounded-xl hover:bg-[#95ce28] transition">إضافة المنتج لقاعدة البيانات</button>
+</div>
+</div>
+<!-- 4. تعديل صفحة معلومات عنا (من نحن) -->
+<div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
+<h3 class="text-xl font-bold mb-4 text-brandGreen">تعديل قسم معلومات عنا / من نحن</h3>
+<div class="space-y-4">
+<div>
+<label class="block text-sm text-zinc-400 mb-2">رفع صورة البراند الخاصة بقسم من نحن:</label>
+<input type="file" id="aboutImageFile" accept="image/*" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-zinc-400 file:bg-brandGreen file:text-black file:border-0 file:rounded-lg file:px-3 file:py-1 file:cursor-pointer">
+</div>
+<div>
+<label class="block text-sm text-zinc-400 mb-2">النص الكبير / تفاصيل من نحن:</label>
+<textarea id="aboutTextInput" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white h-24"></textarea>
+</div>
+<button onclick="saveAboutSettings()" class="bg-brandGreen text-black font-bold px-6 py-3 rounded-xl hover:bg-[#95ce28] transition">حفظ معلومات عنا</button>
+</div>
+</div>
+</div>
+<script>
+const SUPABASE_URL = 'https://bmwhkfyvqbfapdryuzk.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_sZTxkrHj9qWsjyoBnZUJPQ_ljP3QC9q';
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+function checkPassword() {
+const pass = document.getElementById('adminPassword').value;
+if (pass === 'NOUR3011') {
+document.getElementById('loginScreen').classList.add('hidden');
+document.getElementById('adminPanel').classList.remove('hidden');
+loadSettings();
+} else {
+alert('كلمة المرور خطأ!');
+}
+}
+async function loadSettings() {
+const { data } = await _supabase.from('site_settings').select('*');
+if (data) {
+data.forEach(item => {
+if (item.key === 'hero_title') document.getElementById('heroTitleInput').value = item.value;
+if (item.key === 'hero_subtitle') document.getElementById('heroSubtitleInput').value = item.value;
+if (item.key === 'whatsapp_number') document.getElementById('whatsappInput').value = item.value;
+if (item.key === 'about_text') document.getElementById('aboutTextInput').value = item.value;
+if (item.key === 'beginner_name') document.getElementById('beginnerName').value = item.value;
+if (item.key === 'beginner_price') document.getElementById('beginnerPrice').value = item.value;
+if (item.key === 'beginner_discount') document.getElementById('beginnerDiscount').value = item.value;
+if (item.key === 'beginner_details') document.getElementById('beginnerDetails').value = item.value;
+});
+}
+}
+async function uploadImageFile(file) {
+const fileName = img_${Date.now()}_${file.name};
+const { error } = await _supabase.storage.from('image').upload(fileName, file);
+if (error) {
+throw new Error(error.message);
+}
+const { data } = _supabase.storage.from('image').getPublicUrl(fileName);
+return data.publicUrl;
+}
+async function saveHeroSettings() {
+try {
+const title = document.getElementById('heroTitleInput').value;
+const subtitle = document.getElementById('heroSubtitleInput').value;
+const whatsapp = document.getElementById('whatsappInput').value;
+const file = document.getElementById('heroImageFile').files[0];
+let imageUrl = null;
+if (file) {
+imageUrl = await uploadImageFile(file);
+}
+await _supabase.from('site_settings').upsert({ key: 'hero_title', value: title });
+await _supabase.from('site_settings').upsert({ key: 'hero_subtitle', value: subtitle });
+await _supabase.from('site_settings').upsert({ key: 'whatsapp_number', value: whatsapp });
+if (imageUrl) {
+await _supabase.from('site_settings').upsert({ key: 'hero_image', value: imageUrl });
+}
+alert('تم حفظ إعدادات الهيرو بنجاح!');
+} catch (err) {
+alert('خطأ أثناء الحفظ: ' + err.message);
+}
+}
+async function saveBeginnerProduct() {
+try {
+const name = document.getElementById('beginnerName').value;
+const price = document.getElementById('beginnerPrice').value;
+const discount = document.getElementById('beginnerDiscount').value;
+const details = document.getElementById('beginnerDetails').value;
+const file = document.getElementById('beginnerImageFile').files[0];
+let imageUrl = null;
+if (file) {
+imageUrl = await uploadImageFile(file);
+}
+await _supabase.from('site_settings').upsert({ key: 'beginner_name', value: name });
+await _supabase.from('site_settings').upsert({ key: 'beginner_price', value: price });
+await _supabase.from('site_settings').upsert({ key: 'beginner_discount', value: discount });
+await _supabase.from('site_settings').upsert({ key: 'beginner_details', value: details });
+if (imageUrl) {
+await _supabase.from('site_settings').upsert({ key: 'beginner_image', value: imageUrl });
+}
+alert('تم حفظ منتج المبتدئين بنجاح!');
+} catch (err) {
+alert('خطأ: ' + err.message);
+}
+}
+async function addProduct() {
+try {
+const name = document.getElementById('productName').value;
+const price = document.getElementById('productPrice').value;
+const discount = document.getElementById('productDiscount').value;
+const details = document.getElementById('productDetails').value;
+const file = document.getElementById('productImageFile').files[0];
+if (!name || !price || !file) {
+alert('يرجى إدخال الاسم، السعر، وصورة المنتج!');
+return;
+}
+const imageUrl = await uploadImageFile(file);
+const { error } = await _supabase.from('products').insert([
+{ name, price, discount, details, image_url: imageUrl }
+]);
+if (error) throw new Error(error.message);
+alert('تم إضافة المنتج بنجاح للقاعدة!');
+document.getElementById('productName').value = '';
+document.getElementById('productPrice').value = '';
+document.getElementById('productDiscount').value = '';
+document.getElementById('productDetails').value = '';
+document.getElementById('productImageFile').value = '';
+} catch (err) {
+alert('خطأ في إضافة المنتج: ' + err.message);
+}
+}
+async function saveAboutSettings() {
+try {
+const aboutText = document.getElementById('aboutTextInput').value;
+const file = document.getElementById('aboutImageFile').files[0];
+let imageUrl = null;
+if (file) {
+imageUrl = await uploadImageFile(file);
+}
+await _supabase.from('site_settings').upsert({ key: 'about_text', value: aboutText });
+if (imageUrl) {
+await _supabase.from('site_settings').upsert({ key: 'about_image', value: imageUrl });
+}
+alert('تم حفظ معلومات عنا بنجاح!');
+} catch (err) {
+alert('خطأ: ' + err.message);
+}
+}
+</script>
+</body>
+</html>
