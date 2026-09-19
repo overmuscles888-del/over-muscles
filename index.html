@@ -1,380 +1,119 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Over Muscles - المكملات الغذائية للابطال</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #000000; color: #f8fafc; }
-        .accent-color { color: #A8E630; }
-        .bg-accent { background-color: #A8E630; }
-        .border-accent { border-color: #A8E630; }
-        .hover\:bg-accent-dark:hover { background-color: #93cd23; }
-        .focus\:border-accent:focus { border-color: #A8E630; }
-        .selection\:bg-accent::selection { background-color: #A8E630; color: #000000; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Over Muscles</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandDark: '#000000',
+            brandGreen: '#A8E630',
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-[#A8E630] selection:text-black">
+<body class="bg-brandDark text-white font-sans selection:bg-brandGreen selection:text-black">
 
-    <!-- الموقع الرئيسي -->
-    <div id="main-site" class="flex-grow">
-        <!-- الهيدر -->
-        <header class="bg-black border-b border-zinc-900 sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                <h1 id="brand-logo-text" class="text-xl font-black text-[#A8E630] tracking-wider">Over Muscles</h1>
-                <nav class="flex items-center gap-6 text-sm font-semibold">
-                    <a href="#home" class="hover:text-[#A8E630] transition">الرئيسية</a>
-                    <a href="#products-section" class="hover:text-[#A8E630] transition">المنتجات</a>
-                    <a href="#about-section" class="hover:text-[#A8E630] transition">من نحن</a>
-                </nav>
-            </div>
-        </header>
-
-        <!-- الهيرو -->
-        <section id="home" class="relative bg-black py-20 border-b border-zinc-900 overflow-hidden">
-            <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h2 id="hero-title-view" class="text-4xl md:text-5xl font-black mb-6 leading-tight">طريقك للبناء العضلي السليم والمكملات الأصلية 100%</h2>
-                    <p id="hero-subtitle-view" class="text-zinc-400 text-lg mb-8">مكملات غذائية أصلية خالية من الهرمونات، مصممة خصيصاً لأبطال الجيم الذين يبحثون عن نتائج حقيقية ونظيفة.</p>
-                    <div class="flex items-center gap-4">
-                        <a href="#products-section" class="bg-[#A8E630] hover:bg-[#93cd23] text-black font-extrabold px-8 py-3.5 rounded-xl transition shadow-lg shadow-[#A8E630]/20">عرض المنتجات</a>
-                    </div>
-                </div>
-                <div class="relative h-80 rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl">
-                    <img id="hero-image-view" src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1000&auto=format&fit=crop" alt="Gym Hero" class="w-full h-full object-cover">
-                </div>
-            </div>
-        </section>
-
-        <!-- المنتجات الشائعة -->
-        <section class="py-16 max-w-7xl mx-auto px-4">
-            <h3 class="text-2xl font-black mb-8 border-r-4 border-[#A8E630] pr-3">المنتجات الشائعة</h3>
-            <div id="trending-products-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- يتم تعبئتها ديناميكياً -->
-            </div>
-        </section>
-
-        <!-- منتج المبتدئين المميز -->
-        <section class="py-12 bg-black border-y border-zinc-900">
-            <div class="max-w-7xl mx-auto px-4">
-                <h3 class="text-2xl font-black mb-6 text-[#A8E630]">🔥 اختيارنا الأول للمبتدئين</h3>
-                <div id="beginner-product-container" class="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 md:p-8 grid md:grid-cols-3 gap-6 items-center">
-                    <!-- يتم تعبئتها ديناميكياً -->
-                </div>
-            </div>
-        </section>
-
-        <!-- صفحة المنتجات الكاملة -->
-        <section id="products-section" class="py-16 max-w-7xl mx-auto px-4">
-            <h3 class="text-3xl font-black mb-8 text-center">جميع منتجات Over Muscles</h3>
-            <div id="all-products-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- يتم تعبئتها ديناميكياً -->
-            </div>
-        </section>
-
-        <!-- قسم من نحن -->
-        <section id="about-section" class="py-20 bg-black border-t border-zinc-900">
-            <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
-                <div class="h-80 rounded-2xl overflow-hidden border border-zinc-800">
-                    <img id="about-image-view" src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1000&auto=format&fit=crop" alt="About" class="w-full h-full object-cover">
-                </div>
-                <div>
-                    <h3 class="text-3xl font-black mb-6">من نحن - Over Muscles</h3>
-                    <p id="about-text-view" class="text-zinc-400 leading-relaxed mb-6">نحن نؤمن بأن القوة الحقيقية تبدأ من التغذية السليمة والمكملات النقية بعيداً عن أي مواد ضارة.</p>
-                </div>
-            </div>
-        </section>
+  <!-- الهيدر الاحترافي (بدون أي أزرار للوحات التحكم نهائياً) -->
+  <header class="bg-black/90 border-b border-zinc-900 sticky top-0 z-50 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 id="brandTitle" class="text-2xl font-black text-brandGreen tracking-wider">OVER MUSCLES</h1>
+      <nav class="space-x-6 space-x-reverse font-semibold text-zinc-300">
+        <a href="#home" class="hover:text-brandGreen transition">الرئيسية</a>
+        <a href="#products" class="hover:text-brandGreen transition">المنتجات</a>
+        <a href="#about" class="hover:text-brandGreen transition">من نحن</a>
+      </nav>
     </div>
+  </header>
 
-    <!-- لوحة التحكم (تظهر فقط عند استخدام /admin) -->
-    <div id="admin-panel" class="hidden flex-grow max-w-5xl mx-auto px-4 py-12 w-full">
-        <!-- نافذة كلمة المرور -->
-        <div id="admin-login-box" class="max-w-md mx-auto bg-zinc-950 border border-zinc-800 p-8 rounded-2xl shadow-2xl mt-16">
-            <h2 class="text-2xl font-black mb-6 text-center text-[#A8E630]">بوابة الإدارة - Over Muscles</h2>
-            <input type="password" id="admin-pass-input" placeholder="أدخل كلمة المرور" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:border-[#A8E630]">
-            <button onclick="verifyAdminPassword()" class="w-full bg-[#A8E630] text-black font-extrabold py-3 rounded-xl hover:bg-[#93cd23] transition">دخول لوحة التحكم</button>
-        </div>
-
-        <!-- محتوى لوحة التحكم المحمية -->
-        <div id="admin-dashboard-content" class="hidden space-y-12">
-            <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
-                <h2 class="text-3xl font-black text-[#A8E630]">لوحة التحكم السحابية</h2>
-                <button onclick="logoutAdmin()" class="bg-red-500/10 text-red-400 border border-red-500/20 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-red-500/20 transition">تسجيل الخروج</button>
-            </div>
-
-            <!-- إعدادات الرئيسية -->
-            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-2xl space-y-4">
-                <h3 class="text-xl font-bold mb-4">تعديل الصفحة الرئيسية ومن نحن</h3>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold mb-2">عنوان الهيرو (اسم البراند / العنوان الرئيسي)</label>
-                        <input type="text" id="edit-hero-title" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2.5 focus:border-[#A8E630] outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold mb-2">رقم واتساب الأعمال (بالصيغة الدولية)</label>
-                        <input type="text" id="edit-whatsapp" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2.5 focus:border-[#A8E630] outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold mb-2">النص التوضيحي للهيرو (Subtitle)</label>
-                    <textarea id="edit-hero-subtitle" rows="2" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2.5 focus:border-[#A8E630] outline-none"></textarea>
-                </div>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold mb-2">رابط صورة الهيرو</label>
-                        <input type="text" id="edit-hero-image" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2.5 focus:border-[#A8E630] outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold mb-2">رابط صورة صفحة من نحن</label>
-                        <input type="text" id="edit-about-image" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2.5 focus:border-[#A8E630] outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold mb-2">نص "من نحن"</label>
-                    <textarea id="edit-about-text" rows="3" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2.5 focus:border-[#A8E630] outline-none"></textarea>
-                </div>
-                <button onclick="saveSiteSettings()" class="bg-[#A8E630] text-black font-extrabold px-6 py-2.5 rounded-xl hover:bg-[#93cd23] transition">حفظ إعدادات الموقع</button>
-            </div>
-
-            <!-- إضافة منتج جديد -->
-            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-2xl space-y-4">
-                <h3 class="text-xl font-bold mb-4">إضافة منتج جديد</h3>
-                <div class="grid md:grid-cols-3 gap-4">
-                    <input type="text" id="new-prod-name" placeholder="اسم المنتج" class="bg-black border border-zinc-800 rounded-xl px-4 py-2.5 focus:border-[#A8E630] outline-none">
-                    <input type="number" id="new-prod-price" placeholder="السعر" class="bg-black border border-zinc-800 rounded-xl px-4 py-2.5 focus:border-[#A8E630] outline-none">
-                    <input type="number" id="new-prod-discount" placeholder="نسبة الخصم % (اختياري)" class="bg-black border border-zinc-800 rounded-xl px-4 py-2.5 focus:border-[#A8E630] outline-none">
-                </div>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <input type="text" id="new-prod-image" placeholder="رابط صورة المنتج" class="bg-black border border-zinc-800 rounded-xl px-4 py-2.5 focus:border-[#A8E630] outline-none">
-                    <div class="flex items-center gap-2">
-                        <input type="checkbox" id="new-prod-trending" class="w-5 h-5 rounded accent-[#A8E630]">
-                        <label for="new-prod-trending" class="text-sm font-semibold">عرض ضمن المنتجات الشائعة</label>
-                    </div>
-                </div>
-                <textarea id="new-prod-details" placeholder="تفاصيل المنتج (الطعم، الاستخدام، مناسب لمين...)" rows="2" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2.5 focus:border-[#A8E630] outline-none"></textarea>
-                <button onclick="addNewProduct()" class="bg-[#A8E630] text-black font-extrabold px-6 py-2.5 rounded-xl hover:bg-[#93cd23] transition">إضافة المنتج</button>
-            </div>
-
-            <!-- إدارة المنتجات الحالية -->
-            <div class="bg-zinc-950 border border-zinc-800 p-6 rounded-2xl">
-                <h3 class="text-xl font-bold mb-4">المنتجات الحالية</h3>
-                <div id="admin-products-list" class="space-y-3">
-                    <!-- يتم تعبئتها ديناميكياً -->
-                </div>
-            </div>
-        </div>
+  <!-- القسم الرئيسي (الهيرو) -->
+  <section id="home" class="max-w-6xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-12 items-center">
+    <div>
+      <h2 id="heroTitle" class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight text-white">الحركة هي عالمي، ابدأ بناء عضلاتك الآن</h2>
+      <p id="heroSubtitle" class="text-lg text-zinc-400 mb-8 leading-relaxed">احصل على أفضل المنتجات والمكملات لدعم رحلتك الرياضية بأعلى جودة وأفضل سعر ممكن.</p>
+      <a href="#products" class="inline-block bg-brandGreen text-black px-8 py-4 rounded-xl font-bold shadow-lg hover:bg-[#95ce28] transition transform hover:-translate-y-0.5">عرض المنتجات</a>
     </div>
+    <div class="relative">
+      <div class="absolute -inset-1 bg-gradient-to-r from-brandGreen to-zinc-800 rounded-2xl blur opacity-30"></div>
+      <img id="heroImage" src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600" alt="Hero Image" class="relative w-full h-[400px] rounded-2xl object-cover border border-zinc-800 shadow-2xl">
+    </div>
+  </section>
 
-    <!-- الفوتر -->
-    <footer class="bg-black border-t border-zinc-900 py-6 text-center text-xs text-zinc-500">
-        جميع الحقوق محفوظة © Over Muscles 2026
-    </footer>
+  <!-- المنتجات الشائعة / كل المنتجات -->
+  <section id="products" class="max-w-6xl mx-auto px-4 py-16 border-t border-zinc-900">
+    <h3 class="text-3xl font-bold mb-2 text-center">المنتجات الشائعة</h3>
+    <p class="text-center text-zinc-400 mb-10">اختر ما يناسب رحلتك الرياضية للوصول لهدفك</p>
+    <div id="productsGrid" class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <!-- المنتجات تظهر هنا أوتوماتيكياً من قاعدة البيانات لحظياً -->
+    </div>
+  </section>
 
-    <!-- سكريبت الربط والتشغيل السحابي -->
-    <script>
-        const SUPABASE_URL = 'https://bmwehkfyvqbfapdryuzk.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_sZTxkrHj9qWsjyoBnZUJPQ_ljP3QC9q';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  <!-- قسم معلومات عنا (من نحن) -->
+  <section id="about" class="bg-zinc-950 py-16 border-t border-zinc-900 mt-12">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h3 class="text-3xl font-bold mb-6 text-brandGreen">معلومات عنا</h3>
+      <p id="aboutText" class="text-zinc-300 leading-relaxed text-lg">نحن منصة متخصصة في توفير أفضل المنتجات الرياضية ومكملات اللياقة البدنية لمساعدتك على تحقيق أهدافك بكل ثقة واحترافية.</p>
+    </div>
+  </section>
 
-        let siteData = {};
-        let allProducts = [];
+  <!-- الفوتر الصغير النظيف الاحترافي -->
+  <footer class="bg-black border-t border-zinc-900 py-6 text-center text-xs text-zinc-500">
+    <p>جميع الحقوق محفوظة © Over Muscles 2026</p>
+  </footer>
 
-        async function initApp() {
-            if (window.location.pathname.includes('/admin') || window.location.hash === '#admin') {
-                document.getElementById('main-site').classList.add('hidden');
-                document.getElementById('admin-panel').classList.remove('hidden');
-            }
+  <!-- سكربت الربط اللحظي بـ Supabase -->
+  <script>
+    const SUPABASE_URL = 'https://bmwhkfyvqbfapdryuzk.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_sZTxkrHj9qWsjyoBnZUJPQ_ljP3QC9q';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            await fetchSiteData();
-            await fetchProducts();
-        }
+    async function loadPublicData() {
+      // 1. جلب إعدادات الموقع
+      const { data: settings } = await _supabase.from('site_settings').select('*');
+      if (settings) {
+        settings.forEach(item => {
+          if (item.key === 'brand_title') document.getElementById('brandTitle').innerText = item.value;
+          if (item.key === 'hero_title') document.getElementById('heroTitle').innerText = item.value;
+          if (item.key === 'hero_subtitle') document.getElementById('heroSubtitle').innerText = item.value;
+          if (item.key === 'hero_image') document.getElementById('heroImage').src = item.value;
+          if (item.key === 'about_text') document.getElementById('aboutText').innerText = item.value;
+          if (item.key === 'whatsapp_number') window.whatsappNumber = item.value;
+        });
+      }
 
-        async function fetchSiteData() {
-            const { data, error } = await supabaseClient.from('site_settings').select('*').limit(1).single();
-            if (data) {
-                siteData = data;
-                document.getElementById('brand-logo-text').innerText = data.hero_title || "Over Muscles";
-                document.getElementById('hero-title-view').innerText = data.hero_title || "طريقك للبناء العضلي السليم";
-                document.getElementById('hero-subtitle-view').innerText = data.hero_subtitle || "";
-                document.getElementById('about-text-view').innerText = data.about_text || "";
-                if(data.hero_image) document.getElementById('hero-image-view').src = data.hero_image;
-                if(data.about_image) document.getElementById('about-image-view').src = data.about_image;
+      // 2. جلب المنتجات وعرضها
+      const { data: products } = await _supabase.from('products').select('*');
+      const grid = document.getElementById('productsGrid');
+      if (products && products.length > 0) {
+        grid.innerHTML = products.map(p => `
+          <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between hover:border-brandGreen/50 transition">
+            <div>
+              ${p.discount ? `<span class="bg-brandGreen text-black text-xs font-bold px-2 py-1 rounded mb-2 inline-block">خصم ${p.discount}%</span>` : ''}
+              <img src="${p.image_url}" alt="${p.name}" class="w-full h-48 object-cover rounded-lg mb-4 border border-zinc-800">
+              <h4 class="font-bold text-xl mb-1 text-white">${p.name}</h4>
+              <p class="text-zinc-400 text-sm mb-4 leading-relaxed">${p.details || ''}</p>
+            </div>
+            <div class="flex items-center justify-between pt-4 border-t border-zinc-800">
+              <span class="text-brandGreen font-black text-xl">${p.price} ج.م</span>
+              <a href="https://wa.me/${window.whatsappNumber || '201000000000'}?text=${encodeURIComponent('أريد طلب منتج: ' + p.name)}" target="_blank" class="bg-brandGreen text-black px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#95ce28] transition">اطلب الآن</a>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        grid.innerHTML = '<p class="col-span-3 text-center text-zinc-500 py-8">لا توجد منتجات مضافة حالياً. يمكنك إضافتها عبر لوحة التحكم.</p>';
+      }
+    }
 
-                document.getElementById('edit-hero-title').value = data.hero_title || "";
-                document.getElementById('edit-hero-subtitle').value = data.hero_subtitle || "";
-                document.getElementById('edit-whatsapp').value = data.whatsapp_number || "201030143861";
-                document.getElementById('edit-hero-image').value = data.hero_image || "";
-                document.getElementById('edit-about-image').value = data.about_image || "";
-                document.getElementById('edit-about-text').value = data.about_text || "";
-            }
-        }
-
-        async function fetchProducts() {
-            const { data, error } = await supabaseClient.from('products').select('*').order('id', { ascending: false });
-            if (data) {
-                allProducts = data;
-                renderStorefront();
-                renderAdminProductsList();
-            }
-        }
-
-        function renderStorefront() {
-            const trendingContainer = document.getElementById('trending-products-container');
-            const allContainer = document.getElementById('all-products-container');
-            const beginnerContainer = document.getElementById('beginner-product-container');
-
-            trendingContainer.innerHTML = '';
-            allContainer.innerHTML = '';
-
-            const trending = allProducts.filter(p => p.is_trending);
-            const displayTrending = trending.length > 0 ? trending : allProducts.slice(0, 3);
-
-            displayTrending.forEach(p => {
-                trendingContainer.innerHTML += createProductCard(p);
-            });
-
-            allProducts.forEach(p => {
-                allContainer.innerHTML += createProductCard(p);
-            });
-
-            if (allProducts.length > 0) {
-                const bProd = allProducts[0];
-                beginnerContainer.innerHTML = `
-                    <div class="h-48 rounded-xl overflow-hidden border border-zinc-800">
-                        <img src="${bProd.image || 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=800'}" class="w-full h-full object-cover">
-                    </div>
-                    <div class="md:col-span-2 space-y-3">
-                        <span class="bg-[#A8E630]/10 text-[#A8E630] text-xs font-bold px-3 py-1 rounded-full border border-[#A8E630]/20">الخيار الأول للبداية الصحيحة</span>
-                        <h4 class="text-xl font-black">${bProd.name}</h4>
-                        <p class="text-zinc-400 text-sm">${bProd.details || 'منتج مثالي لزيادة الكتلة العضلية النقية ودعم الطاقة.'}</p>
-                        <div class="flex items-center gap-4">
-                            <span class="text-[#A8E630] font-bold text-lg">${bProd.price} ج.م</span>
-                            <button onclick="orderOnWhatsApp('${bProd.name}')" class="bg-[#A8E630] hover:bg-[#93cd23] text-black font-extrabold px-6 py-2 rounded-xl text-sm transition">اطلب الآن عبر واتساب</button>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function createProductCard(p) {
-            return `
-                <div class="bg-zinc-950 border border-zinc-900 rounded-2xl overflow-hidden flex flex-col justify-between group hover:border-[#A8E630]/50 transition">
-                    <div>
-                        <div class="h-52 overflow-hidden relative">
-                            <img src="${p.image || 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=800'}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            ${p.discount > 0 ? `<span class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">خصم ${p.discount}%</span>` : ''}
-                        </div>
-                        <div class="p-5 space-y-2">
-                            <h4 class="font-bold text-lg">${p.name}</h4>
-                            <p class="text-zinc-400 text-xs line-clamp-2">${p.details || ''}</p>
-                        </div>
-                    </div>
-                    <div class="p-5 pt-0 flex items-center justify-between mt-4">
-                        <span class="text-[#A8E630] font-black text-lg">${p.price} ج.م</span>
-                        <button onclick="orderOnWhatsApp('${p.name}')" class="bg-[#A8E630] hover:bg-[#93cd23] text-black font-extrabold px-4 py-2 rounded-xl text-sm transition">اطلب الآن</button>
-                    </div>
-                </div>
-            `;
-        }
-
-        function orderOnWhatsApp(productName) {
-            const phone = siteData.whatsapp_number || '201030143861';
-            const message = encodeURIComponent(`مرحباً Over Muscles، أريد طلب منتج: ${productName}`);
-            window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
-        }
-
-        function verifyAdminPassword() {
-            const pass = document.getElementById('admin-pass-input').value;
-            if (pass === 'NOUR3011') {
-                document.getElementById('admin-login-box').classList.add('hidden');
-                document.getElementById('admin-dashboard-content').classList.remove('hidden');
-            } else {
-                alert('كلمة المرور غير صحيحة!');
-            }
-        }
-
-        function logoutAdmin() {
-            window.location.href = window.location.pathname.split('/admin')[0];
-        }
-
-        async function saveSiteSettings() {
-            const updated = {
-                hero_title: document.getElementById('edit-hero-title').value,
-                hero_subtitle: document.getElementById('edit-hero-subtitle').value,
-                whatsapp_number: document.getElementById('edit-whatsapp').value,
-                hero_image: document.getElementById('edit-hero-image').value,
-                about_image: document.getElementById('edit-about-image').value,
-                about_text: document.getElementById('edit-about-text').value
-            };
-
-            const { error } = await supabaseClient.from('site_settings').update(updated).eq('id', 1);
-            if (!error) {
-                alert('تم حفظ إعدادات الموقع بنجاح!');
-                fetchSiteData();
-            } else {
-                alert('حدث خطأ أثناء الحفظ.');
-            }
-        }
-
-        async function addNewProduct() {
-            const newProd = {
-                name: document.getElementById('new-prod-name').value,
-                price: parseFloat(document.getElementById('new-prod-price').value) || 0,
-                discount: parseFloat(document.getElementById('new-prod-discount').value) || 0,
-                image: document.getElementById('new-prod-image').value,
-                details: document.getElementById('new-prod-details').value,
-                is_trending: document.getElementById('new-prod-trending').checked
-            };
-
-            if (!newProd.name) {
-                alert('يرجى كتابة اسم المنتج على الأقل.');
-                return;
-            }
-
-            const { error } = await supabaseClient.from('products').insert([newProd]);
-            if (!error) {
-                alert('تمت إضافة المنتج بنجاح!');
-                document.getElementById('new-prod-name').value = '';
-                document.getElementById('new-prod-price').value = '';
-                document.getElementById('new-prod-discount').value = '';
-                document.getElementById('new-prod-image').value = '';
-                document.getElementById('new-prod-details').value = '';
-                document.getElementById('new-prod-trending').checked = false;
-                fetchProducts();
-            } else {
-                alert('حدث خطأ أثناء الإضافة.');
-            }
-        }
-
-        function renderAdminProductsList() {
-            const listContainer = document.getElementById('admin-products-list');
-            listContainer.innerHTML = '';
-            allProducts.forEach(p => {
-                listContainer.innerHTML += `
-                    <div class="flex items-center justify-between bg-black border border-zinc-800 p-4 rounded-xl">
-                        <div>
-                            <h5 class="font-bold">${p.name}</h5>
-                            <span class="text-xs text-[#A8E630]">${p.price} ج.م</span>
-                        </div>
-                        <button onclick="deleteProduct(${p.id})" class="bg-red-500/10 text-red-400 px-3 py-1.5 rounded-lg text-xs hover:bg-red-500/20 transition">حذف</button>
-                    </div>
-                `;
-            });
-        }
-
-        async function deleteProduct(id) {
-            if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
-                await supabaseClient.from('products').delete().eq('id', id);
-                fetchProducts();
-            }
-        }
-
-        window.onload = initApp;
-    </script>
+    window.addEventListener('DOMContentLoaded', loadPublicData);
+  </script>
 </body>
 </html>
