@@ -1,260 +1,2381 @@
-<!DOCTYPE html>
+<!doctype html>
+
 <html lang="ar" dir="rtl">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم - Over Muscles</title>
-<script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-<script>
-tailwind.config = {
-theme: {
-extend: {
-colors: {
-brandDark: '#000000',
-brandGreen: '#A8E630',
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1"
+>
+
+<title>
+  Over Muscles — Admin
+</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+:root{
+  --g:#A8E630;
+  --b:#000;
+  --bg:#0a0a0a;
+  --card:#131313;
+  --line:#292929;
+  --muted:#999;
+  --white:#f7f7f7;
+  --red:#ff5c5c;
 }
+
+*{
+  box-sizing:border-box;
 }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:Arial,"Cairo",sans-serif;
 }
+
+button,
+input,
+textarea,
+select{
+  font:inherit;
 }
-</script>
-<script src="[https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2](https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2)"></script>
+
+button{
+  cursor:pointer;
+}
+
+.wrap{
+  width:min(
+    calc(100% - 28px),
+    1250px
+  );
+  margin:auto;
+}
+
+.top{
+  height:70px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  font-weight:950;
+  font-size:22px;
+}
+
+.logo span{
+  color:var(--g);
+}
+
+.logout{
+  border:1px solid #333;
+  background:#171717;
+  color:#fff;
+  padding:9px 14px;
+  border-radius:8px;
+}
+
+.login{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:20px;
+}
+
+.login-box{
+  width:min(420px,100%);
+  background:var(--card);
+  border:1px solid var(--line);
+  padding:30px;
+  border-radius:18px;
+}
+
+.login-box h1{
+  margin:0 0 8px;
+}
+
+.muted{
+  color:var(--muted);
+  line-height:1.7;
+}
+
+.input,
+.textarea,
+.select{
+  width:100%;
+  background:#0b0b0b;
+  color:#fff;
+  border:1px solid #333;
+  border-radius:9px;
+  padding:12px;
+  outline:0;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus{
+  border-color:var(--g);
+}
+
+.textarea{
+  min-height:130px;
+  resize:vertical;
+}
+
+.field{
+  margin:14px 0;
+}
+
+.field label{
+  display:block;
+  font-size:13px;
+  color:#ccc;
+  margin-bottom:7px;
+}
+
+.btn{
+  border:0;
+  border-radius:9px;
+  padding:11px 16px;
+  font-weight:900;
+}
+
+.primary{
+  background:var(--g);
+  color:#000;
+}
+
+.secondary{
+  background:#1b1b1b;
+  color:#fff;
+  border:1px solid #333;
+}
+
+.danger{
+  background:#351717;
+  color:#ff8c8c;
+  border:1px solid #552020;
+}
+
+.admin{
+  padding-bottom:60px;
+}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  padding:20px 0;
+}
+
+.tab{
+  white-space:nowrap;
+  background:#141414;
+  border:1px solid #292929;
+  color:#bbb;
+  padding:10px 15px;
+  border-radius:8px;
+}
+
+.tab.active{
+  background:var(--g);
+  color:#000;
+  border-color:var(--g);
+  font-weight:900;
+}
+
+.panel{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:22px;
+  margin-bottom:18px;
+}
+
+.panel h2{
+  margin:0 0 18px;
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.actions{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.preview{
+  width:100%;
+  max-height:300px;
+  object-fit:cover;
+  border-radius:10px;
+  background:#0b0b0b;
+  border:1px solid #2a2a2a;
+}
+
+.upload{
+  border:1px dashed #444;
+  padding:14px;
+  border-radius:10px;
+  background:#0c0c0c;
+}
+
+.status{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+.products-admin{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+
+.padmin{
+  background:#0d0d0d;
+  border:1px solid #292929;
+  border-radius:13px;
+  overflow:hidden;
+}
+
+.padmin img{
+  width:100%;
+  aspect-ratio:1;
+  object-fit:cover;
+  background:#171717;
+}
+
+.pbody{
+  padding:13px;
+}
+
+.pbody h3{
+  margin:0 0 7px;
+}
+
+.small{
+  font-size:12px;
+  color:#888;
+}
+
+.popular-list{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+}
+
+.check{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:#0b0b0b;
+  border:1px solid #292929;
+  padding:10px;
+  border-radius:8px;
+}
+
+.check input{
+  accent-color:var(--g);
+}
+
+.hidden{
+  display:none!important;
+}
+
+.danger-text{
+  color:#ff6d6d;
+}
+
+.toast{
+  position:fixed;
+  bottom:18px;
+  left:18px;
+  background:#171717;
+  border:1px solid #333;
+  padding:12px 16px;
+  border-radius:9px;
+  display:none;
+  z-index:99;
+}
+
+.toast.show{
+  display:block;
+}
+
+@media(max-width:850px){
+
+  .grid2,
+  .products-admin{
+    grid-template-columns:1fr 1fr;
+  }
+
+}
+
+@media(max-width:600px){
+
+  .wrap{
+    width:min(
+      calc(100% - 18px),
+      1250px
+    );
+  }
+
+  .grid2,
+  .products-admin,
+  .popular-list{
+    grid-template-columns:1fr;
+  }
+
+  .panel{
+    padding:16px;
+  }
+
+  .top{
+    height:62px;
+  }
+
+}
+
+</style>
+
 </head>
-<body class="bg-brandDark text-white font-sans selection:bg-brandGreen selection:text-black">
-<div id="loginScreen" class="fixed inset-0 bg-black flex items-center justify-center z-50">
-<div class="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl w-full max-w-md shadow-2xl text-center">
-<h2 class="text-2xl font-black text-brandGreen mb-4">لوحة التحكم السحابية</h2>
-<p class="text-zinc-400 text-sm mb-6">أدخل كلمة المرور (NOUR3011)</p>
-<input type="password" id="adminPassword" placeholder="كلمة المرور" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white mb-4 focus:outline-none focus:border-brandGreen">
-<button onclick="checkPassword()" class="w-full bg-brandGreen text-black font-bold py-3 rounded-xl hover:bg-[#95ce28] transition">دخول</button>
+
+<body>
+
+
+<div id="login" class="login">
+
+  <div class="login-box">
+
+    <h1>
+      Over Muscles
+    </h1>
+
+    <p class="muted">
+      لوحة التحكم الخاصة بالموقع.
+      أدخل كلمة المرور للمتابعة.
+    </p>
+
+    <div class="field">
+
+      <label>
+        كلمة المرور
+      </label>
+
+      <input
+        id="pass"
+        class="input"
+        type="password"
+        placeholder="Password"
+        autocomplete="off"
+      >
+
+    </div>
+
+    <button
+      class="btn primary"
+      style="width:100%"
+      onclick="login()"
+    >
+      دخول
+    </button>
+
+    <p
+      id="loginMsg"
+      class="danger-text"
+    ></p>
+
+  </div>
+
 </div>
+
+
+<div
+  id="app"
+  class="admin hidden"
+>
+
+<header class="top">
+
+  <div
+    class="wrap"
+    style="
+      display:flex;
+      width:100%;
+      justify-content:space-between;
+      align-items:center
+    "
+  >
+
+    <div class="logo">
+
+      OVER
+      <span>MUSCLES</span>
+      / ADMIN
+
+    </div>
+
+    <button
+      class="logout"
+      onclick="logout()"
+    >
+      خروج
+    </button>
+
+  </div>
+
+</header>
+
+
+<div class="wrap">
+
+
+<div class="tabs">
+
+  <button
+    class="tab active"
+    onclick="showTab('home',this)"
+  >
+    الرئيسية
+  </button>
+
+  <button
+    class="tab"
+    onclick="showTab('products',this)"
+  >
+    المنتجات
+  </button>
+
+  <button
+    class="tab"
+    onclick="showTab('about',this)"
+  >
+    معلومات عنا
+  </button>
+
 </div>
-<div id="adminPanel" class="hidden max-w-4xl mx-auto px-4 py-12">
-<div class="flex justify-between items-center mb-10 pb-6 border-b border-zinc-800">
-<h1 class="text-3xl font-black text-brandGreen">لوحة التحكم الكاملة - Over Muscles</h1>
-<a href="index.html" target="_blank" class="bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-sm hover:border-brandGreen transition">عرض الموقع ↗</a>
-</div>
-<!-- 1. تعديل الواجهة الرئيسية (الهيرو) -->
-<div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-8 shadow-xl">
-<h3 class="text-xl font-bold mb-4 text-brandGreen">تعديل الواجهة الرئيسية (الهيرو)</h3>
-<div class="space-y-4">
+
+
+<!-- HOME -->
+
+<section
+  id="home"
+  class="tabpage"
+>
+
+<div class="panel">
+
+<h2>
+  إعدادات الصفحة الرئيسية
+</h2>
+
+<div class="grid2">
+
 <div>
-<label class="block text-sm text-zinc-400 mb-2">عنوان البراند / الهيرو:</label>
-<input type="text" id="heroTitleInput" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+
+<div class="field">
+
+<label>
+  عنوان Hero
+</label>
+
+<input
+  id="heroTitle"
+  class="input"
+>
+
 </div>
+
+
+<div class="field">
+
+<label>
+  العنوان الفرعي
+</label>
+
+<textarea
+  id="heroSubtitle"
+  class="textarea"
+></textarea>
+
+</div>
+
+
+<div class="field">
+
+<label>
+  صورة Hero
+</label>
+
+<div class="upload">
+
+<input
+  id="heroFile"
+  type="file"
+  accept="image/*"
+  onchange="
+    previewUpload(
+      'heroFile',
+      'heroPreview',
+      'heroStatus'
+    )
+  "
+>
+
+<div
+  id="heroStatus"
+  class="status"
+>
+اختر صورة من جهازك ثم اضغط حفظ.
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
 <div>
-<label class="block text-sm text-zinc-400 mb-2">النص الفرعي (السبتايتل):</label>
-<textarea id="heroSubtitleInput" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white h-20"></textarea>
+
+<img
+  id="heroPreview"
+  class="preview"
+  style="display:none"
+  alt="Hero preview"
+>
+
 </div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+  class="btn primary"
+  onclick="saveHome()"
+>
+حفظ إعدادات الرئيسية
+</button>
+
+</div>
+
+</div>
+
+
+<!-- POPULAR -->
+
+<div class="panel">
+
+<h2>
+  المنتجات الشائعة
+</h2>
+
+<p class="muted">
+  اختر من 2 إلى 4 منتجات.
+  إذا لم تختر أي منتج سيعرض الموقع أول المنتجات تلقائيًا.
+</p>
+
+<div
+  id="popularList"
+  class="popular-list"
+></div>
+
+</div>
+
+
+<!-- BEGINNER -->
+
+<div class="panel">
+
+<h2>
+  أفضل منتج للمبتدئين
+</h2>
+
+<div class="grid2">
+
 <div>
-<label class="block text-sm text-zinc-400 mb-2">رفع صورة الهيرو الجديدة من الجهاز أو الموبايل:</label>
-<input type="file" id="heroImageFile" accept="image/*" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-zinc-400 file:bg-brandGreen file:text-black file:border-0 file:rounded-lg file:px-3 file:py-1 file:cursor-pointer">
+
+<div class="field">
+
+<label>
+  المنتج
+</label>
+
+<select
+  id="beginnerProduct"
+  class="select"
+></select>
+
 </div>
+
+
+<div class="field">
+
+<label>
+  لماذا هذا المنتج مناسب للمبتدئين؟
+</label>
+
+<textarea
+  id="beginnerText"
+  class="textarea"
+></textarea>
+
+</div>
+
+</div>
+
+
 <div>
-<label class="block text-sm text-zinc-400 mb-2">رقم واتساب الأعمال:</label>
-<input type="text" id="whatsappInput" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+
+<div
+  id="beginnerPreviewBox"
+  class="status"
+>
+—
 </div>
-<button onclick="saveHeroSettings()" class="bg-brandGreen text-black font-bold px-6 py-3 rounded-xl hover:bg-[#95ce28] transition">حفظ إعدادات الهيرو والواتساب</button>
+
 </div>
+
 </div>
-<!-- 2. تعديل قسم أفضل منتج للمبتدئين -->
-<div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-8 shadow-xl">
-<h3 class="text-xl font-bold mb-4 text-brandGreen">تعديل أفضل منتج للمبتدئين</h3>
-<div class="space-y-4">
+
+
+<div class="actions">
+
+<button
+  class="btn primary"
+  onclick="saveHome()"
+>
+حفظ اختيار المبتدئ
+</button>
+
+</div>
+
+</div>
+
+
+<!-- WHATSAPP -->
+
+<div class="panel">
+
+<h2>
+  WhatsApp
+</h2>
+
+<div class="field">
+
+<label>
+  رقم الأعمال
+</label>
+
+<input
+  id="whatsapp"
+  class="input"
+  placeholder="2010..."
+>
+
+</div>
+
+<div class="actions">
+
+<button
+  class="btn primary"
+  onclick="saveHome()"
+>
+حفظ الرقم
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- PRODUCTS -->
+
+<section
+  id="products"
+  class="tabpage hidden"
+>
+
+<div class="panel">
+
+<div
+  style="
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:center
+  "
+>
+
 <div>
-<label class="block text-sm text-zinc-400 mb-2">اسم المنتج:</label>
-<input type="text" id="beginnerName" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+
+<h2 style="margin:0">
+  إدارة المنتجات
+</h2>
+
+<div class="muted">
+  إضافة وتعديل وحذف المنتجات.
 </div>
-<div class="grid grid-cols-2 gap-4">
+
+</div>
+
+<button
+  class="btn primary"
+  onclick="openProduct()"
+>
++ إضافة منتج
+</button>
+
+</div>
+
+</div>
+
+
+<div
+  id="productsList"
+  class="products-admin"
+></div>
+
+</section>
+
+
+<!-- ABOUT -->
+
+<section
+  id="about"
+  class="tabpage hidden"
+>
+
+<div class="panel">
+
+<h2>
+  معلومات عنا
+</h2>
+
+<div class="grid2">
+
 <div>
-<label class="block text-sm text-zinc-400 mb-2">السعر (ج.م):</label>
-<input type="text" id="beginnerPrice" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+
+<div class="field">
+
+<label>
+  عنوان الصفحة
+</label>
+
+<input
+  id="aboutTitle"
+  class="input"
+>
+
 </div>
+
+
+<div class="field">
+
+<label>
+  النص
+</label>
+
+<textarea
+  id="aboutText"
+  class="textarea"
+  style="min-height:240px"
+></textarea>
+
+</div>
+
+</div>
+
+
 <div>
-<label class="block text-sm text-zinc-400 mb-2">نسبة الخصم (اختياري):</label>
-<input type="text" id="beginnerDiscount" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+
+<div class="field">
+
+<label>
+  صورة About
+</label>
+
+<div class="upload">
+
+<input
+  id="aboutFile"
+  type="file"
+  accept="image/*"
+  onchange="
+    previewUpload(
+      'aboutFile',
+      'aboutPreview',
+      'aboutStatus'
+    )
+  "
+>
+
+<div
+  id="aboutStatus"
+  class="status"
+>
+اختر صورة من جهازك.
 </div>
+
 </div>
+
+</div>
+
+
+<img
+  id="aboutPreview"
+  class="preview"
+  style="display:none"
+  alt="About preview"
+>
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+  class="btn primary"
+  onclick="saveAbout()"
+>
+حفظ معلومات عنا
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+</div>
+
+</div>
+
+
+<!-- PRODUCT MODAL -->
+
+<div
+  id="productModal"
+  class="hidden"
+  style="
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.82);
+    z-index:80;
+    overflow:auto;
+    padding:20px
+  "
+>
+
+<div
+  class="panel"
+  style="
+    width:min(700px,100%);
+    margin:20px auto
+  "
+>
+
+<div
+  style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center
+  "
+>
+
+<h2 id="modalTitle">
+  إضافة منتج
+</h2>
+
+<button
+  class="btn secondary"
+  onclick="closeProduct()"
+>
+إغلاق
+</button>
+
+</div>
+
+
+<input
+  id="productId"
+  type="hidden"
+>
+
+
+<div class="grid2">
+
 <div>
-<label class="block text-sm text-zinc-400 mb-2">صورة المنتج:</label>
-<input type="file" id="beginnerImageFile" accept="image/*" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-zinc-400 file:bg-brandGreen file:text-black file:border-0 file:rounded-lg file:px-3 file:py-1 file:cursor-pointer">
+
+<div class="field">
+
+<label>
+  اسم المنتج
+</label>
+
+<input
+  id="pName"
+  class="input"
+>
+
 </div>
+
+
+<div class="field">
+
+<label>
+  السعر
+</label>
+
+<input
+  id="pPrice"
+  class="input"
+  type="number"
+  min="0"
+  step="0.01"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+  نسبة الخصم (اختياري)
+</label>
+
+<input
+  id="pDiscount"
+  class="input"
+  type="number"
+  min="0"
+  max="100"
+  step="1"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+  ترتيب المنتج
+</label>
+
+<input
+  id="pSort"
+  class="input"
+  type="number"
+  value="0"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+  تفاصيل المنتج
+</label>
+
+<textarea
+  id="pDetails"
+  class="textarea"
+></textarea>
+
+</div>
+
+
+<label class="check">
+
+<input
+  id="pActive"
+  type="checkbox"
+  checked
+>
+
+المنتج ظاهر للزوار
+
+</label>
+
+</div>
+
+
 <div>
-<label class="block text-sm text-zinc-400 mb-2">تفاصيل لماذا هذا المنتج مفضل للمبتدئين:</label>
-<textarea id="beginnerDetails" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white h-20"></textarea>
+
+<div class="field">
+
+<label>
+  صورة المنتج
+</label>
+
+<div class="upload">
+
+<input
+  id="pFile"
+  type="file"
+  accept="image/*"
+  onchange="
+    previewUpload(
+      'pFile',
+      'pPreview',
+      'pStatus'
+    )
+  "
+>
+
+<div
+  id="pStatus"
+  class="status"
+>
+اختر صورة من جهازك.
 </div>
-<button onclick="saveBeginnerProduct()" class="bg-brandGreen text-black font-bold px-6 py-3 rounded-xl hover:bg-[#95ce28] transition">حفظ منتج المبتدئين</button>
+
 </div>
+
 </div>
-<!-- 3. إضافة وتعديل المنتجات اللانهائية -->
-<div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 mb-8 shadow-xl">
-<h3 class="text-xl font-bold mb-4 text-brandGreen">إضافة منتج جديد للمنتجات الشائعة / الكاملة</h3>
-<div class="space-y-4">
-<div>
-<label class="block text-sm text-zinc-400 mb-2">اسم المنتج:</label>
-<input type="text" id="productName" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+
+
+<img
+  id="pPreview"
+  class="preview"
+  style="display:none"
+  alt="Product preview"
+>
+
 </div>
-<div class="grid grid-cols-2 gap-4">
-<div>
-<label class="block text-sm text-zinc-400 mb-2">السعر (ج.م):</label>
-<input type="text" id="productPrice" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+
 </div>
-<div>
-<label class="block text-sm text-zinc-400 mb-2">نسبة الخصم (اختياري):</label>
-<input type="text" id="productDiscount" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white">
+
+
+<div class="actions">
+
+<button
+  class="btn primary"
+  onclick="saveProduct()"
+>
+حفظ المنتج
+</button>
+
+<button
+  class="btn danger"
+  onclick="deleteCurrentProduct()"
+>
+حذف
+</button>
+
 </div>
+
 </div>
-<div>
-<label class="block text-sm text-zinc-400 mb-2">صورة المنتج:</label>
-<input type="file" id="productImageFile" accept="image/*" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-zinc-400 file:bg-brandGreen file:text-black file:border-0 file:rounded-lg file:px-3 file:py-1 file:cursor-pointer">
+
 </div>
-<div>
-<label class="block text-sm text-zinc-400 mb-2">تفاصيل المنتج (الطعم، الاستخدام، إلخ):</label>
-<textarea id="productDetails" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white h-20"></textarea>
-</div>
-<button onclick="addProduct()" class="w-full bg-brandGreen text-black font-bold py-3 rounded-xl hover:bg-[#95ce28] transition">إضافة المنتج لقاعدة البيانات</button>
-</div>
-</div>
-<!-- 4. تعديل صفحة معلومات عنا (من نحن) -->
-<div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
-<h3 class="text-xl font-bold mb-4 text-brandGreen">تعديل قسم معلومات عنا / من نحن</h3>
-<div class="space-y-4">
-<div>
-<label class="block text-sm text-zinc-400 mb-2">رفع صورة البراند الخاصة بقسم من نحن:</label>
-<input type="file" id="aboutImageFile" accept="image/*" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-zinc-400 file:bg-brandGreen file:text-black file:border-0 file:rounded-lg file:px-3 file:py-1 file:cursor-pointer">
-</div>
-<div>
-<label class="block text-sm text-zinc-400 mb-2">النص الكبير / تفاصيل من نحن:</label>
-<textarea id="aboutTextInput" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-2 text-white h-24"></textarea>
-</div>
-<button onclick="saveAboutSettings()" class="bg-brandGreen text-black font-bold px-6 py-3 rounded-xl hover:bg-[#95ce28] transition">حفظ معلومات عنا</button>
-</div>
-</div>
-</div>
+
+
+<div
+  class="toast"
+  id="toast"
+></div>
+
+
 <script>
-const SUPABASE_URL = 'https://bmwhkfyvqbfapdryuzk.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_sZTxkrHj9qWsjyoBnZUJPQ_ljP3QC9q';
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-function checkPassword() {
-const pass = document.getElementById('adminPassword').value;
-if (pass === 'NOUR3011') {
-document.getElementById('loginScreen').classList.add('hidden');
-document.getElementById('adminPanel').classList.remove('hidden');
-loadSettings();
-} else {
-alert('كلمة المرور خطأ!');
+
+const SUPABASE_URL =
+  'https://bmwehkfyvqbfapdryuzk.supabase.co';
+
+const SUPABASE_KEY =
+  'sb_publishable_sZTxkrHj9qWsjyoBnZUJPQ_ljP3QC9q';
+
+const ADMIN_PASSWORD =
+  'NOUR3011';
+
+
+const sb =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+const FALLBACK = {
+
+  id:1,
+
+  hero_title:
+    'OVER MUSCLES',
+
+  hero_subtitle:
+    'ارفع مستواك. اختر منتجاتك بعناية وابدأ رحلتك.',
+
+  hero_image_url:
+    '',
+
+  about_title:
+    'من نحن',
+
+  about_text:
+    'في Over Muscles نركز على تقديم منتجات رياضية مختارة بعناية مع معلومات واضحة وتجربة شراء بسيطة ومباشرة.',
+
+  about_image_url:
+    '',
+
+  whatsapp:
+    '201030143861',
+
+  popular_product_ids:
+    [],
+
+  beginner_product_id:
+    null,
+
+  beginner_text:
+    'اختيار مناسب للمبتدئ حسب احتياجاته وأهدافه.'
+
+};
+
+
+let settings = {
+  ...FALLBACK
+};
+
+let products = [];
+
+let editingId = null;
+
+
+const $ =
+  id =>
+    document.getElementById(id);
+
+
+const esc =
+  s =>
+    String(s ?? '')
+      .replace(
+        /[&<>'"]/g,
+        c =>
+          ({
+            '&':'&amp;',
+            '<':'&lt;',
+            '>':'&gt;',
+            "'":'&#39;',
+            '"':'&quot;'
+          }[c])
+      );
+
+
+function toast(t){
+
+  $('toast').textContent = t;
+
+  $('toast')
+    .classList
+    .add('show');
+
+  setTimeout(
+    () =>
+      $('toast')
+        .classList
+        .remove('show'),
+    2800
+  );
+
 }
+
+
+function login(){
+
+  if(
+    $('pass').value ===
+    ADMIN_PASSWORD
+  ){
+
+    sessionStorage.setItem(
+      'over_admin',
+      '1'
+    );
+
+    $('login')
+      .classList
+      .add('hidden');
+
+    $('app')
+      .classList
+      .remove('hidden');
+
+    init();
+
+  }
+
+  else{
+
+    $('loginMsg')
+      .textContent =
+      'كلمة المرور غير صحيحة.';
+
+  }
+
 }
-async function loadSettings() {
-const { data } = await _supabase.from('site_settings').select('*');
-if (data) {
-data.forEach(item => {
-if (item.key === 'hero_title') document.getElementById('heroTitleInput').value = item.value;
-if (item.key === 'hero_subtitle') document.getElementById('heroSubtitleInput').value = item.value;
-if (item.key === 'whatsapp_number') document.getElementById('whatsappInput').value = item.value;
-if (item.key === 'about_text') document.getElementById('aboutTextInput').value = item.value;
-if (item.key === 'beginner_name') document.getElementById('beginnerName').value = item.value;
-if (item.key === 'beginner_price') document.getElementById('beginnerPrice').value = item.value;
-if (item.key === 'beginner_discount') document.getElementById('beginnerDiscount').value = item.value;
-if (item.key === 'beginner_details') document.getElementById('beginnerDetails').value = item.value;
-});
+
+
+function logout(){
+
+  sessionStorage.removeItem(
+    'over_admin'
+  );
+
+  location.reload();
+
 }
+
+
+function showTab(id,btn){
+
+  document
+    .querySelectorAll('.tabpage')
+    .forEach(
+      x =>
+        x.classList
+          .add('hidden')
+    );
+
+  $(id)
+    .classList
+    .remove('hidden');
+
+  document
+    .querySelectorAll('.tab')
+    .forEach(
+      x =>
+        x.classList
+          .remove('active')
+    );
+
+  btn.classList.add('active');
+
 }
-async function uploadImageFile(file) {
-const fileName = img_${Date.now()}_${file.name};
-const { error } = await _supabase.storage.from('image').upload(fileName, file);
-if (error) {
-throw new Error(error.message);
+
+
+function price(n){
+
+  return new Intl.NumberFormat(
+    'ar-EG',
+    {
+      maximumFractionDigits:2
+    }
+  ).format(
+    Number(n || 0)
+  ) + ' جنيه';
+
 }
-const { data } = _supabase.storage.from('image').getPublicUrl(fileName);
-return data.publicUrl;
+
+
+async function loadData(){
+
+  const [
+    s,
+    p
+  ] = await Promise.all([
+
+    sb
+      .from('site_settings')
+      .select('*')
+      .eq('id',1)
+      .maybeSingle(),
+
+    sb
+      .from('products')
+      .select('*')
+      .order(
+        'sort_order',
+        {
+          ascending:true
+        }
+      )
+      .order(
+        'created_at',
+        {
+          ascending:false
+        }
+      )
+
+  ]);
+
+
+  if(s.error)
+    throw s.error;
+
+
+  if(p.error)
+    throw p.error;
+
+
+  settings = {
+    ...FALLBACK,
+    ...(s.data || {})
+  };
+
+
+  products =
+    p.data || [];
+
+
+  fillSettings();
+
+  renderProducts();
+
 }
-async function saveHeroSettings() {
-try {
-const title = document.getElementById('heroTitleInput').value;
-const subtitle = document.getElementById('heroSubtitleInput').value;
-const whatsapp = document.getElementById('whatsappInput').value;
-const file = document.getElementById('heroImageFile').files[0];
-let imageUrl = null;
-if (file) {
-imageUrl = await uploadImageFile(file);
+
+
+function fillSettings(){
+
+  $('heroTitle').value =
+    settings.hero_title || '';
+
+
+  $('heroSubtitle').value =
+    settings.hero_subtitle || '';
+
+
+  $('whatsapp').value =
+    settings.whatsapp || '';
+
+
+  $('beginnerText').value =
+    settings.beginner_text || '';
+
+
+  $('aboutTitle').value =
+    settings.about_title || '';
+
+
+  $('aboutText').value =
+    settings.about_text || '';
+
+
+  if(
+    settings.hero_image_url
+  ){
+
+    $('heroPreview').src =
+      settings.hero_image_url;
+
+    $('heroPreview')
+      .style
+      .display =
+      'block';
+
+  }
+
+
+  if(
+    settings.about_image_url
+  ){
+
+    $('aboutPreview').src =
+      settings.about_image_url;
+
+    $('aboutPreview')
+      .style
+      .display =
+      'block';
+
+  }
+
+
+  renderChoices();
+
 }
-await _supabase.from('site_settings').upsert({ key: 'hero_title', value: title });
-await _supabase.from('site_settings').upsert({ key: 'hero_subtitle', value: subtitle });
-await _supabase.from('site_settings').upsert({ key: 'whatsapp_number', value: whatsapp });
-if (imageUrl) {
-await _supabase.from('site_settings').upsert({ key: 'hero_image', value: imageUrl });
+
+
+function renderChoices(){
+
+  const ids =
+    Array.isArray(
+      settings.popular_product_ids
+    )
+      ? settings.popular_product_ids
+      : [];
+
+
+  $('popularList').innerHTML =
+
+    products.length
+
+      ?
+
+      products
+        .map(
+          p => `
+
+<label class="check">
+
+<input
+  type="checkbox"
+  value="${p.id}"
+  ${
+    ids.includes(p.id)
+      ? 'checked'
+      : ''
+  }
+>
+
+<span>
+  ${esc(p.name)}
+</span>
+
+</label>
+
+`
+        )
+        .join('')
+
+      :
+
+      '<div class="muted">أضف منتجات أولًا.</div>';
+
+
+  $('beginnerProduct').innerHTML =
+
+    '<option value="">— لا يوجد —</option>' +
+
+    products
+      .map(
+        p => `
+
+<option
+  value="${p.id}"
+  ${
+    p.id ===
+    settings.beginner_product_id
+      ? 'selected'
+      : ''
+  }
+>
+${esc(p.name)}
+</option>
+
+`
+      )
+      .join('');
+
+
+  updateBeginnerPreview();
+
 }
-alert('تم حفظ إعدادات الهيرو بنجاح!');
-} catch (err) {
-alert('خطأ أثناء الحفظ: ' + err.message);
+
+
+$('beginnerProduct')
+  .addEventListener(
+    'change',
+    updateBeginnerPreview
+  );
+
+
+function updateBeginnerPreview(){
+
+  const p =
+    products.find(
+      x =>
+        x.id ===
+        $('beginnerProduct').value
+    );
+
+
+  $('beginnerPreviewBox')
+    .innerHTML =
+
+    p
+
+      ?
+
+      `
+
+<img
+  class="preview"
+  src="${esc(p.image_url || '')}"
+  style="max-height:230px"
+>
+
+<br>
+
+${esc(p.name)}
+—
+${price(p.price)}
+
+`
+
+      :
+
+      'اختر منتجًا.';
+
 }
+
+
+async function upload(
+  file,
+  bucket,
+  folder
+){
+
+  if(!file)
+    return null;
+
+
+  const ext =
+    (
+      file.name
+        .split('.')
+        .pop() ||
+      'jpg'
+    )
+      .toLowerCase()
+      .replace(
+        /[^a-z0-9]/g,
+        ''
+      );
+
+
+  const path =
+
+    `${folder}/` +
+    `${Date.now()}-` +
+    `${Math.random()
+      .toString(36)
+      .slice(2)}.` +
+    `${ext || 'jpg'}`;
+
+
+  const {
+    error
+  } =
+    await sb
+      .storage
+      .from(bucket)
+      .upload(
+        path,
+        file,
+        {
+          upsert:false,
+          cacheControl:
+            '31536000'
+        }
+      );
+
+
+  if(error)
+    throw error;
+
+
+  return sb
+    .storage
+    .from(bucket)
+    .getPublicUrl(path)
+    .data
+    .publicUrl;
+
 }
-async function saveBeginnerProduct() {
-try {
-const name = document.getElementById('beginnerName').value;
-const price = document.getElementById('beginnerPrice').value;
-const discount = document.getElementById('beginnerDiscount').value;
-const details = document.getElementById('beginnerDetails').value;
-const file = document.getElementById('beginnerImageFile').files[0];
-let imageUrl = null;
-if (file) {
-imageUrl = await uploadImageFile(file);
+
+
+function previewUpload(
+  input,
+  preview,
+  status
+){
+
+  const f =
+    $(input).files[0];
+
+
+  if(!f)
+    return;
+
+
+  $(preview).src =
+    URL.createObjectURL(f);
+
+
+  $(preview)
+    .style
+    .display =
+    'block';
+
+
+  $(status)
+    .textContent =
+    `جاهز للرفع: ${f.name}`;
+
 }
-await _supabase.from('site_settings').upsert({ key: 'beginner_name', value: name });
-await _supabase.from('site_settings').upsert({ key: 'beginner_price', value: price });
-await _supabase.from('site_settings').upsert({ key: 'beginner_discount', value: discount });
-await _supabase.from('site_settings').upsert({ key: 'beginner_details', value: details });
-if (imageUrl) {
-await _supabase.from('site_settings').upsert({ key: 'beginner_image', value: imageUrl });
+
+
+async function saveHome(){
+
+  try{
+
+    let hero =
+      settings.hero_image_url;
+
+
+    const hf =
+      $('heroFile').files[0];
+
+
+    if(hf){
+
+      $('heroStatus')
+        .textContent =
+        'جارٍ رفع الصورة...';
+
+
+      hero =
+        await upload(
+          hf,
+          'site-assets',
+          'hero'
+        );
+
+
+      $('heroStatus')
+        .textContent =
+        'تم رفع صورة Hero.';
+
+    }
+
+
+    const ids =
+      [
+        ...document
+          .querySelectorAll(
+            '#popularList input:checked'
+          )
+      ]
+        .map(
+          x => x.value
+        )
+        .slice(0,4);
+
+
+    const row = {
+
+      id:1,
+
+      hero_title:
+        $('heroTitle')
+          .value
+          .trim(),
+
+      hero_subtitle:
+        $('heroSubtitle')
+          .value
+          .trim(),
+
+      hero_image_url:
+        hero || '',
+
+      about_title:
+        settings.about_title ||
+        'من نحن',
+
+      about_text:
+        settings.about_text ||
+        '',
+
+      about_image_url:
+        settings.about_image_url ||
+        '',
+
+      whatsapp:
+        $('whatsapp')
+          .value
+          .replace(
+            /\D/g,
+            ''
+          ),
+
+      popular_product_ids:
+        ids,
+
+      beginner_product_id:
+        $('beginnerProduct')
+          .value ||
+        null,
+
+      beginner_text:
+        $('beginnerText')
+          .value
+          .trim(),
+
+      updated_at:
+        new Date()
+          .toISOString()
+
+    };
+
+
+    const {
+      error
+    } =
+      await sb
+        .from('site_settings')
+        .upsert(
+          row,
+          {
+            onConflict:'id'
+          }
+        );
+
+
+    if(error)
+      throw error;
+
+
+    settings = {
+      ...settings,
+      ...row
+    };
+
+
+    toast(
+      'تم حفظ إعدادات الرئيسية.'
+    );
+
+  }
+
+  catch(e){
+
+    console.error(e);
+
+    toast(
+      'فشل الحفظ: ' +
+      e.message
+    );
+
+  }
+
 }
-alert('تم حفظ منتج المبتدئين بنجاح!');
-} catch (err) {
-alert('خطأ: ' + err.message);
+
+
+async function saveAbout(){
+
+  try{
+
+    let img =
+      settings.about_image_url;
+
+
+    const f =
+      $('aboutFile').files[0];
+
+
+    if(f){
+
+      img =
+        await upload(
+          f,
+          'site-assets',
+          'about'
+        );
+
+    }
+
+
+    const patch = {
+
+      about_title:
+        $('aboutTitle')
+          .value
+          .trim(),
+
+      about_text:
+        $('aboutText')
+          .value
+          .trim(),
+
+      about_image_url:
+        img || '',
+
+      updated_at:
+        new Date()
+          .toISOString()
+
+    };
+
+
+    const {
+      error
+    } =
+      await sb
+        .from('site_settings')
+        .upsert(
+          {
+            id:1,
+            ...patch
+          },
+          {
+            onConflict:'id'
+          }
+        );
+
+
+    if(error)
+      throw error;
+
+
+    settings = {
+      ...settings,
+      ...patch
+    };
+
+
+    toast(
+      'تم حفظ معلومات عنا.'
+    );
+
+  }
+
+  catch(e){
+
+    console.error(e);
+
+    toast(
+      'فشل الحفظ: ' +
+      e.message
+    );
+
+  }
+
 }
+
+
+function renderProducts(){
+
+  $('productsList')
+    .innerHTML =
+
+    products.length
+
+      ?
+
+      products
+        .map(
+          p => `
+
+<article class="padmin">
+
+<img
+  src="${esc(p.image_url || '')}"
+  alt=""
+>
+
+<div class="pbody">
+
+<h3>
+  ${esc(p.name)}
+</h3>
+
+<div>
+
+${price(p.price)}
+
+${
+  p.discount
+    ? `
+      <span class="small">
+        خصم ${p.discount}%
+      </span>
+    `
+    : ''
 }
-async function addProduct() {
-try {
-const name = document.getElementById('productName').value;
-const price = document.getElementById('productPrice').value;
-const discount = document.getElementById('productDiscount').value;
-const details = document.getElementById('productDetails').value;
-const file = document.getElementById('productImageFile').files[0];
-if (!name || !price || !file) {
-alert('يرجى إدخال الاسم، السعر، وصورة المنتج!');
-return;
+
+</div>
+
+<div
+  class="small"
+  style="margin:7px 0"
+>
+
+${p.active
+  ? 'ظاهر للزوار'
+  : 'مخفي'}
+
+·
+
+ترتيب
+${p.sort_order || 0}
+
+</div>
+
+<div class="actions">
+
+<button
+  class="btn secondary"
+  onclick="openProduct('${p.id}')"
+>
+تعديل
+</button>
+
+<button
+  class="btn danger"
+  onclick="removeProduct('${p.id}')"
+>
+حذف
+</button>
+
+</div>
+
+</div>
+
+</article>
+
+`
+        )
+        .join('')
+
+      :
+
+      `
+
+<div class="panel">
+
+<div class="muted">
+  لا توجد منتجات.
+</div>
+
+</div>
+
+`;
+
+  renderChoices();
+
 }
-const imageUrl = await uploadImageFile(file);
-const { error } = await _supabase.from('products').insert([
-{ name, price, discount, details, image_url: imageUrl }
-]);
-if (error) throw new Error(error.message);
-alert('تم إضافة المنتج بنجاح للقاعدة!');
-document.getElementById('productName').value = '';
-document.getElementById('productPrice').value = '';
-document.getElementById('productDiscount').value = '';
-document.getElementById('productDetails').value = '';
-document.getElementById('productImageFile').value = '';
-} catch (err) {
-alert('خطأ في إضافة المنتج: ' + err.message);
+
+
+function openProduct(id){
+
+  editingId =
+    id || null;
+
+
+  $('productModal')
+    .classList
+    .remove('hidden');
+
+
+  const p =
+    products.find(
+      x => x.id === id
+    );
+
+
+  $('modalTitle')
+    .textContent =
+    p
+      ? 'تعديل منتج'
+      : 'إضافة منتج';
+
+
+  $('productId').value =
+    id || '';
+
+
+  $('pName').value =
+    p?.name || '';
+
+
+  $('pPrice').value =
+    p?.price ?? '';
+
+
+  $('pDiscount').value =
+    p?.discount ?? 0;
+
+
+  $('pSort').value =
+    p?.sort_order ?? 0;
+
+
+  $('pDetails').value =
+    p?.details || '';
+
+
+  $('pActive').checked =
+    p
+      ? p.active !== false
+      : true;
+
+
+  $('pFile').value =
+    '';
+
+
+  $('pStatus')
+    .textContent =
+    'اختر صورة من جهازك.';
+
+
+  if(p?.image_url){
+
+    $('pPreview').src =
+      p.image_url;
+
+    $('pPreview')
+      .style
+      .display =
+      'block';
+
+  }
+
+  else{
+
+    $('pPreview')
+      .style
+      .display =
+      'none';
+
+  }
+
 }
+
+
+function closeProduct(){
+
+  $('productModal')
+    .classList
+    .add('hidden');
+
 }
-async function saveAboutSettings() {
-try {
-const aboutText = document.getElementById('aboutTextInput').value;
-const file = document.getElementById('aboutImageFile').files[0];
-let imageUrl = null;
-if (file) {
-imageUrl = await uploadImageFile(file);
+
+
+async function saveProduct(){
+
+  try{
+
+    const name =
+      $('pName')
+        .value
+        .trim();
+
+
+    if(!name)
+      throw new Error(
+        'اسم المنتج مطلوب.'
+      );
+
+
+    const old =
+      editingId
+        ? products.find(
+            x =>
+              x.id ===
+              editingId
+          )
+        : null;
+
+
+    let img =
+      old?.image_url || '';
+
+
+    const f =
+      $('pFile').files[0];
+
+
+    if(f){
+
+      $('pStatus')
+        .textContent =
+        'جارٍ رفع الصورة...';
+
+
+      img =
+        await upload(
+          f,
+          'product-images',
+          'products'
+        );
+
+
+      $('pStatus')
+        .textContent =
+        'تم رفع الصورة.';
+
+    }
+
+
+    if(!img)
+      throw new Error(
+        'صورة المنتج مطلوبة.'
+      );
+
+
+    const row = {
+
+      name,
+
+      image_url:
+        img,
+
+      price:
+        Number(
+          $('pPrice')
+            .value || 0
+        ),
+
+      discount:
+        Number(
+          $('pDiscount')
+            .value || 0
+        ),
+
+      details:
+        $('pDetails')
+          .value
+          .trim(),
+
+      sort_order:
+        Number(
+          $('pSort')
+            .value || 0
+        ),
+
+      active:
+        $('pActive')
+          .checked,
+
+      updated_at:
+        new Date()
+          .toISOString()
+
+    };
+
+
+    let q;
+
+
+    if(editingId){
+
+      q =
+        await sb
+          .from('products')
+          .update(row)
+          .eq(
+            'id',
+            editingId
+          );
+
+    }
+
+    else{
+
+      q =
+        await sb
+          .from('products')
+          .insert(row);
+
+    }
+
+
+    if(q.error)
+      throw q.error;
+
+
+    toast(
+      'تم حفظ المنتج.'
+    );
+
+
+    closeProduct();
+
+    await loadData();
+
+  }
+
+  catch(e){
+
+    console.error(e);
+
+    toast(
+      'فشل حفظ المنتج: ' +
+      e.message
+    );
+
+  }
+
 }
-await _supabase.from('site_settings').upsert({ key: 'about_text', value: aboutText });
-if (imageUrl) {
-await _supabase.from('site_settings').upsert({ key: 'about_image', value: imageUrl });
+
+
+async function removeProduct(id){
+
+  if(
+    !confirm(
+      'حذف هذا المنتج نهائيًا؟'
+    )
+  )
+    return;
+
+
+  try{
+
+    const {
+      error
+    } =
+      await sb
+        .from('products')
+        .delete()
+        .eq(
+          'id',
+          id
+        );
+
+
+    if(error)
+      throw error;
+
+
+    toast(
+      'تم حذف المنتج.'
+    );
+
+
+    await loadData();
+
+  }
+
+  catch(e){
+
+    toast(
+      'فشل الحذف: ' +
+      e.message
+    );
+
+  }
+
 }
-alert('تم حفظ معلومات عنا بنجاح!');
-} catch (err) {
-alert('خطأ: ' + err.message);
+
+
+async function deleteCurrentProduct(){
+
+  if(!editingId){
+
+    closeProduct();
+
+    return;
+
+  }
+
+
+  await removeProduct(
+    editingId
+  );
+
+  closeProduct();
+
 }
+
+
+async function init(){
+
+  try{
+
+    await loadData();
+
+
+    sb
+      .channel('admin-live')
+
+      .on(
+        'postgres_changes',
+        {
+          event:'*',
+          schema:'public',
+          table:'products'
+        },
+        loadData
+      )
+
+      .on(
+        'postgres_changes',
+        {
+          event:'*',
+          schema:'public',
+          table:'site_settings'
+        },
+        loadData
+      )
+
+      .subscribe();
+
+  }
+
+  catch(e){
+
+    console.error(e);
+
+    toast(
+      'تعذر تحميل البيانات: ' +
+      e.message
+    );
+
+  }
+
 }
+
+
+if(
+  sessionStorage.getItem(
+    'over_admin'
+  ) === '1'
+){
+
+  $('login')
+    .classList
+    .add('hidden');
+
+  $('app')
+    .classList
+    .remove('hidden');
+
+  init();
+
+}
+
+
+$('pass')
+  .addEventListener(
+    'keydown',
+    e => {
+
+      if(
+        e.key === 'Enter'
+      )
+        login();
+
+    }
+  );
+
 </script>
+
 </body>
 </html>
